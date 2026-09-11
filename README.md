@@ -51,20 +51,52 @@ Tam test kümesinde:
 - Accuracy: %57,13
 - Macro F1: %43,86
 
-## Şifreli Çıkarım Benchmarkı
+## Şifreli Çıkarım Benchmarkları
 
-30 test örneği üzerinde benchmark gerçekleştirilmiştir.
+CKKS ile gerçek şifreli çıkarım, TenSEAL 0.3.17 kullanılarak gerçekleştirilmiştir.
 
-- Plaintext accuracy: %56,67
-- Encrypted accuracy: %50,00
-- Prediction agreement: %70,00
-- Ortalama maksimum CKKS hatası: 2,2001
-- Ortalama mutlak hata: 0,7688
-- Ortalama şifreleme süresi: 4,93 ms
-- Ortalama şifreli çıkarım süresi: 921,56 ms
-- Ortalama toplam HE süresi: 926,49 ms
+### 200 Örnek Random Benchmark
 
-30 örnekli benchmark sonucu modelin tamamındaki test doğruluğu olarak değerlendirilmemelidir.
+Test kümesinin ilk 200 örneği üzerinde benchmark:
+
+| Ölçüm | Sonuç |
+|---|---:|
+| Örnek sayısı | 200 |
+| Plaintext accuracy | **63.50%** |
+| Encrypted accuracy | **53.50%** |
+| Prediction agreement | **74.00%** |
+| Ortalama maksimum CKKS hatası | **2.200091** |
+| Ortalama mutlak hata | **0.768770** |
+| En kötü maksimum hata | **2.200113** |
+| Ortalama şifreleme süresi | **4.52 ms** |
+| Ortalama şifreli çıkarım | **1229.00 ms** |
+| Ortalama toplam HE süresi | **1233.52 ms** |
+
+### 180 Örnek Dengeli Benchmark
+
+Her sınıftan 20 örnek seçilerek toplam 180 örnek üzerinde sınıf dengeli benchmark:
+
+| Ölçüm | Sonuç |
+|---|---:|
+| Örnek sayısı | 180 |
+| Sınıf başına örnek | 20 |
+| Plaintext accuracy | **51.67%** |
+| Encrypted accuracy | **42.22%** |
+| Prediction agreement | **66.67%** |
+| Ortalama maksimum CKKS hatası | **2.200092** |
+| Ortalama mutlak hata | **0.768771** |
+| En kötü maksimum hata | **2.200113** |
+| Ortalama şifreleme süresi | **4.48 ms** |
+| Ortalama şifreli çıkarım | **1222.87 ms** |
+| Ortalama toplam HE süresi | **1227.34 ms** |
+
+### Benchmark Karşılaştırması
+
+![CKKS Benchmark Comparison](benchmark_comparison.png)
+
+Random benchmark ile dengeli benchmark arasındaki fark, örnek dağılımının sonuçlar üzerindeki etkisini göstermektedir. Dengeli benchmark sınıfların eşit temsil edilmesini sağladığı için sınıflar arası karşılaştırma açısından daha kontrollü bir deneydir.
+
+> Benchmark doğrulukları, modelin tam test kümesi doğruluğu olarak yorumlanmamalıdır. Modelin gerçek test performansı 7.180 örnekten oluşan tam test değerlendirmesinde raporlanmıştır.
 
 ## Proje Yapısı
 
@@ -77,6 +109,9 @@ train_he_linear.py
 evaluate_he_linear_test.py
 encrypted_linear_inference.py
 benchmark_encrypted.py
+benchmark_encrypted_200.py
+benchmark_encrypted_balanced_180.py
+compare_benchmarks.py
 test_ckks.py
 test_encrypted_matmul.py
 check_dataset_leakage.py
@@ -94,7 +129,7 @@ pip install -r requirements.txt
 ## Sınırlamalar
 
 - HE modeli normal CNN modelinden daha düşük doğruluğa sahiptir.
-- Şifreli benchmark yalnızca 30 örnek içermektedir.
+- Şifreli benchmarklar 200 örnekli random ve 180 örnekli sınıf-dengeli deneyler içermektedir.
 - CKKS yaklaşık aritmetik kullanmaktadır.
 - Şifreli çıkarım normal çıkarımdan çok daha yavaştır.
 - Final HE modeli doğrusal işlemlerden oluşmaktadır.
